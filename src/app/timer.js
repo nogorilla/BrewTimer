@@ -26,17 +26,24 @@ class Timer {
             timer = duration;
         }
     }, 1000);
+    return this.runningId;
   }
 
   stop() {
     if (typeof this.runningId !== 'undefined') {
       clearInterval(this.runningId);
+      delete this.runningId;
     }
   }
 
   reset() {
     this.stop();
     this._display(this.duration);
+  }
+
+  pause() {
+    this.stop();
+    return this.start();
   }
 }
 
