@@ -1,6 +1,7 @@
 class Timer {
+
   constructor(duration, displayEl) {
-    this.duration = 60 * duration || 3600;
+    this.time = this.duration = 60 * duration || 3600;
     this.displayEl = displayEl;
     this._display(this.duration);
   }
@@ -16,24 +17,30 @@ class Timer {
   }
 
   start() {
-    if (typeof this.runningId !== 'undefined') {
+    if (typeof this.countdownId !== 'undefined') {
       return false;
     }
-    let timer = this.duration;
-    this.runningId = setInterval(() => {
-        this._display(timer);
+    this._countdown();
+    this.countdownId = setInterval(() => this._countdown(), 1000);
+    return this.countdownId;
+  }
 
-        if (--timer < 0) {
-            timer = duration;
-        }
-    }, 1000);
-    return this.runningId;
+  _countdown() {
+    this._display(this.time);
+
+    if (--this.time < 0) {
+      this.end();
+    }
   }
 
   stop() {
-    if (typeof this.runningId !== 'undefined') {
-      clearInterval(this.runningId);
-      delete this.runningId;
+    if (typeof this.countdownId !== 'undefined') {
+      clearInterval(this.countdownId);
+      delete this.countdownId;
+    }
+    if (typeof this.alertId !== 'undefined') {
+      clearInterval(this.alertId);
+      delete this.alertId;
     }
   }
 
@@ -45,6 +52,24 @@ class Timer {
   pause() {
     this.stop();
     return this.start();
+  }
+
+  end() {
+    // #todo what happens when the timer ends?
+    this.stop();
+    this._alert();
+    this.alertId = setInterval(this._alert, 100);
+  }
+
+  _alert() {
+    let el = document.body;
+    if (el.classList.contains('red') || el.classList.contains('accent-4')) {
+      el.classList.remove('red');
+      el.classList.remove('accent-4')
+    } else {
+      el.classList.add('red');
+      el.classList.add('accent-4');
+    }
   }
 }
 
