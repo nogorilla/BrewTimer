@@ -1,6 +1,9 @@
 # Description
 Used to time a mash.
 
+# Development
+`npm run start`
+
 # Todo
 - [ ] Alerts for end of mash timer
   - [ ] sounds

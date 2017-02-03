@@ -1,7 +1,8 @@
 class Timer {
-  constructor(duration) {
+  constructor(duration, displayEl) {
     this.duration = 60 * duration || 3600;
-    this.display = document.getElementById('time');
+    this.displayEl = displayEl;
+    this._display(this.duration);
   }
 
   _display(timer) {
@@ -11,7 +12,7 @@ class Timer {
     minutes = minutes < 10 ? `0${minutes}` : minutes;
     seconds = seconds < 10 ? `0${seconds}` : seconds;
 
-    this.display.textContent = `${minutes}:${seconds}`;
+    this.displayEl.textContent = `${minutes}:${seconds}`;
   }
 
   start() {
