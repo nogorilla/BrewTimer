@@ -1,8 +1,11 @@
 class Timer {
 
-  constructor(duration, displayEl) {
-    this.time = this.duration = 60 * duration || 3600;
-    this.displayEl = displayEl;
+  constructor(options) {
+    let defaults = {duration: 60};
+    Object.assign(defaults, options)
+    this.time = this.duration = 60 * defaults.duration || 3600;
+    this.displayEl = defaults.displayEl;
+    this.alert = defaults.alert;
     this._display(this.duration);
   }
 
@@ -42,11 +45,16 @@ class Timer {
       clearInterval(this.alertId);
       delete this.alertId;
     }
+    this._alertClear();
+    this._soundReset();
   }
 
   reset() {
     this.stop();
+    this.alert.pause();
+    this.alert.currentTime = 0;
     this._display(this.duration);
+    this._soundReset();
   }
 
   pause() {
@@ -55,21 +63,30 @@ class Timer {
   }
 
   end() {
-    // #todo what happens when the timer ends?
     this.stop();
     this._alert();
-    this.alertId = setInterval(this._alert, 100);
+    this.alertId = setInterval(() => this._alert(), 100);
+    this.alert.play();
   }
 
   _alert() {
     let el = document.body;
     if (el.classList.contains('red') || el.classList.contains('accent-4')) {
-      el.classList.remove('red');
-      el.classList.remove('accent-4')
+      this._alertClear();
     } else {
       el.classList.add('red');
       el.classList.add('accent-4');
     }
+  }
+
+  _soundReset() {
+    this.alert.pause();
+    this.alert.currentTime = 0;
+  }
+
+  _alertClear() {
+    document.body.classList.remove('red');
+    document.body.classList.remove('accent-4');
   }
 }
 

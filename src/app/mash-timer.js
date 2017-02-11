@@ -1,11 +1,15 @@
 import Timer from './timer';
 
 class MashTimer extends Timer {
+  
   constructor() {
-    let duration = 60;
-    let display  = document.getElementById('time');
-    super(duration, display);
+    super({
+      duration: 60,
+      displayEl: document.getElementById('time'),
+      alert: document.getElementById('sound-timer')
+    })
   }
+
   start(e) {
     if (typeof e !== 'undefined') {
       const pauseTxt = '<i class="material-icons left">pause_circle_filled</i>pause';
