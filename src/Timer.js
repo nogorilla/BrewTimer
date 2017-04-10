@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react'
-import SecondsTohhmmss from './SecondsTohhmmss'
+import TimeFormat from './TimeFormat'
 
-let offset = null, interval = null
+import './buttons.css';
+
+let offset = null
 
 /**
  * Timer module
@@ -11,44 +13,50 @@ export default class Timer extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { clock: 0, time: '' }
-  }
-
-  componentDidMount() {
-    this.play()
-  }
-
-  componentWillUnmount() {
-    this.pause()
-  }
-
-  pause() {
-    if (interval) {
-      clearInterval(interval)
-      interval = null
+    this.interval = null;
+    this.state = { 
+      time: props.options.time, 
+      initialTime: props.options.secondsRemaining,
+      runningText: 'start' 
     }
   }
 
-  play() {
-    if (!interval) {
-      offset = Date.now()
-      interval = setInterval(this.update.bind(this), this.props.options.delay)
+  componentWillUnmount() {
+    this.reset();
+  }
+
+  stop() {
+    if (this.interval) {
+      clearInterval(this.interval);
+      delete this.interval;
+      this.setState({runningText: 'start'})
+    }
+  }
+
+  pause() {
+    this.stop();
+  }
+
+  start() {
+    if (!this.interval) {
+      this.interval = setInterval(this.update.bind(this), 1000)
+      this.setState({runningText: 'pause'});
+    } else {
+      this.pause();
+      
     }
   }
 
   reset() {
-    let clockReset = 0
-    this.setState({clock: clockReset })
-    let time = SecondsTohhmmss(clockReset / 1000)
-    this.setState({time: time })
+    this.stop();
+    this.setState({time: this.state.initial })
   }
 
   update() {
-    let clock = this.state.clock
-    clock += this.calculateOffset()
-    this.setState({clock: clock })
-    let time = SecondsTohhmmss(clock / 1000)
-    this.setState({time: time })
+    this.setState({time: this.state.time - 1});
+    if (this.state.time <= 0) {
+      clearInterval(this.interval);
+    }
   }
 
   calculateOffset() {
@@ -59,35 +67,14 @@ export default class Timer extends Component {
   }
 
   render() {
-    const timerStyle = {
-      margin: "0px",
-      padding: "2em"
-    };
-
-    const buttonStyle = {
-      background: "#fff",
-      color: "#666",
-      border: "1px solid #ddd",
-      margin: "0.25em",
-      padding: "0.75em",
-      fontWeight: "200"
-    };
-
-    const secondsStyles = {
-      fontSize: "200%",
-      fontWeight: "200",
-      lineHeight: "1.5",
-      margin: "0px",
-      color: "#666"
-    };
 
     return (
-      <div style={timerStyle} className="react-timer">
-        <h3 style={secondsStyles} className="seconds"> {this.state.time} {this.props.prefix}</h3>
+      <div className="mash-timer">
+        <h3 className="seconds"> { TimeFormat(this.state.time) }</h3>
         <br />
-        <button onClick={this.reset.bind(this)} style={buttonStyle} >reset</button>
-        <button onClick={this.play.bind(this)} style={buttonStyle} >play</button>
-        <button onClick={this.pause.bind(this)} style={buttonStyle} >pause</button>
+        <button onClick={this.start.bind(this)} className="btn">{this.state.runningText}</button>
+        <button onClick={this.stop.bind(this)} className="btn">stop</button>
+        <button onClick={this.reset.bind(this)} className="btn">reset</button>
       </div>
     )
   }

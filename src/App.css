@@ -2,22 +2,22 @@
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-}
-
 .App-header {
   background-color: #222;
   padding: 20px;
   color: white;
 }
 
-.App-intro {
-  font-size: large;
+
+.mash-timer {
+  margin: 0px;
+  padding: 2em;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.seconds {
+  font-size: 200%;
+  font-weight: 200;
+  line-height: 1.5;
+  margin: 0px;
+  color: #666;
 }

@@ -9,7 +9,7 @@ class App extends Component {
         <div className="App-header">
           <h2>BrewTimer</h2>
         </div>
-        <Timer options={{ prefix: "seconds elapsed!", delay: 100}} />
+        <Timer options={{ time: 3600 }} />
       </div>
     );
   }
